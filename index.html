@@ -1,0 +1,712 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uniwear - Wear Your Style</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+html{
+  scroll-behavior:smooth;
+}
+
+.product-card{
+  transition: 0.3s;
+}
+
+.product-card:hover{
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.product-card:hover img{
+  transform:scale(1.06);
+}
+</style>
+
+</head>
+
+<body class="bg-gray-50">
+
+<!-- Navbar -->
+<nav class="bg-white shadow-md sticky top-0 z-50">
+<div class="container mx-auto px-6 py-4 flex justify-between items-center">
+
+<h1 class="text-3xl font-bold text-black">
+Uniwear
+</h1>
+
+<ul class="hidden md:flex gap-8 font-medium">
+<li><a href="#home">Home</a></li>
+<li><a href="#products">Products</a></li>
+<li><a href="#categories">Categories</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+
+<div class="flex gap-4 items-center">
+
+<button onclick="toggleFavorites()" class="relative text-xl">
+❤️
+<span id="favCount"
+class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 rounded-full">
+0
+</span>
+</button>
+
+<button onclick="toggleCart()" class="relative text-xl">
+🛒
+<span id="cartCount"
+class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 rounded-full">
+0
+</span>
+</button>
+
+</div>
+
+</div>
+</nav>
+
+<!-- Hero -->
+<section id="home"
+class="bg-black text-white min-h-screen flex items-center">
+
+<div class="container mx-auto px-6 grid md:grid-cols-2 gap-10">
+
+<div>
+
+<h1 class="text-6xl font-bold mb-6">
+Wear Your Style
+</h1>
+
+<p class="text-xl text-gray-300 mb-8">
+Discover premium fashion collections designed
+for modern lifestyles.
+</p>
+
+<a href="#products"
+class="bg-yellow-500 text-black px-8 py-4 rounded-lg font-bold">
+Shop Now
+</a>
+
+</div>
+
+<div>
+<img
+src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1920&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+class="rounded-3xl shadow-2xl">
+</div>
+
+</div>
+
+</section>
+
+<!-- Categories -->
+<section id="categories" class="container mx-auto px-6 py-20">
+<div class="text-center mb-10">
+<h2 class="text-4xl font-bold">Categories</h2>
+</div>
+
+<!-- Gender Selection -->
+<div id="genderSection" class="grid md:grid-cols-3 gap-6 mb-10">
+<div onclick="selectGender('Men')"
+class="bg-white p-10 rounded-xl shadow text-center cursor-pointer hover:bg-black hover:text-white duration-300">
+👔
+<h3 class="text-xl mt-3">Men</h3>
+</div>
+
+<div onclick="selectGender('Women')"
+class="bg-white p-10 rounded-xl shadow text-center cursor-pointer hover:bg-black hover:text-white duration-300">
+👗
+<h3 class="text-xl mt-3">Women</h3>
+</div>
+
+<div onclick="selectGender('Kids')"
+class="bg-white p-10 rounded-xl shadow text-center cursor-pointer hover:bg-black hover:text-white duration-300">
+🧒
+<h3 class="text-xl mt-3">Kids</h3>
+</div>
+</div>
+
+<!-- Subcategories (Hidden by default) -->
+<div id="subcategorySection" class="hidden mb-10">
+<div class="text-center mb-6">
+<h3 id="selectedGenderTitle" class="text-2xl font-bold mb-4"></h3>
+<button onclick="resetCategories()" class="bg-gray-500 text-white px-4 py-2 rounded-lg">Back</button>
+</div>
+<div id="subcategoryContainer" class="grid md:grid-cols-4 gap-6"></div>
+</div>
+
+<!-- Search -->
+<section class="container mx-auto px-6 mb-10">
+
+<input
+type="text"
+id="search"
+placeholder="Search Products..."
+class="w-full p-4 rounded-xl border">
+
+</section>
+<div class="text-center mb-8">
+
+<button
+onclick="displayProducts(products)"
+class="bg-black text-white px-6 py-3 rounded-lg">
+
+Show All Products
+
+</button>
+
+</div>
+
+<!-- Products -->
+<section id="products"
+class="container mx-auto px-6 pb-20">
+
+<h2 class="text-4xl font-bold text-center mb-12">
+Trending Collection
+</h2>
+
+<div id="productContainer"
+class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+</div>
+
+</section>
+
+<section id="favoritesSection" class="hidden fixed inset-0 bg-black/60 z-50 items-center justify-center p-6">
+  <div class="bg-white rounded-3xl w-full max-w-3xl p-8 relative">
+    <button onclick="toggleFavorites()" class="absolute top-4 right-4 text-2xl">✕</button>
+    <h2 class="text-3xl font-bold mb-6">Your Favorites</h2>
+    <div id="favoriteItems" class="space-y-4"></div>
+  </div>
+</section>
+
+<section id="cartSection" class="hidden fixed inset-0 bg-black/60 z-50 items-center justify-center p-6">
+  <div class="bg-white rounded-3xl w-full max-w-3xl p-8 relative">
+    <button onclick="toggleCart()" class="absolute top-4 right-4 text-2xl">✕</button>
+    <h2 class="text-3xl font-bold mb-6">Your Cart</h2>
+    <div id="cartItems" class="space-y-4"></div>
+    <p id="cartTotal" class="text-xl font-bold mt-6"></p>
+  </div>
+</section>
+
+<!-- Product Detail Modal -->
+<section id="productDetailSection" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-6">
+  <div class="bg-white rounded-2xl w-full max-w-2xl p-6 relative">
+    <button onclick="hideProductView()" class="absolute top-3 right-3 text-2xl">✕</button>
+    
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Image Section -->
+      <div>
+        <img id="viewImg" class="w-full h-80 object-cover rounded-xl">
+      </div>
+
+      <!-- Details Section -->
+      <div class="flex flex-col justify-between">
+        <div>
+          <h2 id="viewName" class="text-3xl font-bold mb-3"></h2>
+          <p id="viewCategory" class="text-gray-600 mb-1"></p>
+          <p id="viewFor" class="text-gray-600 mb-4"></p>
+          <p id="viewPrice" class="text-2xl font-bold text-yellow-600 mb-6"></p>
+        </div>
+
+        <!-- Quantity Control -->
+        <div class="mb-6">
+          <p class="font-semibold mb-2">Quantity:</p>
+          <div class="flex gap-3">
+            <button onclick="minusQty()" class="bg-gray-300 px-3 py-2 rounded-lg w-10">-</button>
+            <input type="text" id="viewQty" value="1" class="border-2 border-gray-300 w-12 text-center rounded-lg py-2" readonly>
+            <button onclick="plusQty()" class="bg-gray-300 px-3 py-2 rounded-lg w-10">+</button>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-3">
+          <button onclick="addFromDetail()" class="flex-1 bg-black text-white py-3 rounded-lg font-semibold">Add To Cart</button>
+          <button id="viewLike" onclick="toggleLike()" class="bg-gray-200 px-6 py-3 rounded-lg text-xl">🤍</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="bg-black text-white py-20">
+
+<div class="container mx-auto px-6 text-center">
+
+<h2 class="text-4xl font-bold mb-6">
+Join Uniwear Club
+</h2>
+
+<input
+type="email"
+placeholder="Enter your email"
+class="p-4 rounded-lg text-black w-80">
+
+<button
+class="bg-yellow-500 text-black px-6 py-4 rounded-lg font-bold">
+Subscribe
+</button>
+
+</div>
+
+</section>
+
+<!-- Footer -->
+<footer
+id="contact"
+class="bg-gray-900 text-white py-10 text-center">
+
+<h3 class="text-3xl font-bold">
+Uniwear
+</h3>
+
+<p class="mt-3">
+© 2026 Uniwear. All Rights Reserved.
+</p>
+
+</footer>
+
+<script>
+
+const products = [
+
+{
+name:"Premium Hoodie",
+gender:"Men",
+type:"Basics",
+price:1999,
+image:"image.png"
+},
+
+{
+name:"Formal Shirt",
+gender:"Men",
+type:"Basics",
+price:1499,
+image:"image copy.png"
+},
+
+{
+name:"Summer Dress",
+gender:"Women",
+type:"Basics",
+price:2299,
+image:"image copy 2.png"
+},
+
+{
+name:"Tan Top",
+gender:"Women",
+type:"Basics",
+price:1199,
+image:"image copy 3.png"
+},
+
+{
+name:"Kids Hoodie",
+gender:"Kids",
+type:"Basics",
+price:999,
+image:"image copy 4.png"
+},
+
+{
+name:"Kids T-Shirt",
+gender:"Kids",
+type:"Basics",
+price:799,
+image:"image copy 11.png"
+},
+
+{
+name:"Leather Handbag",
+gender:"Women",
+type:"Accessories",
+price:1899,
+image:"image copy 5.png"
+},
+
+{
+name:"Luxury Watch",
+gender:"Women",
+type:"Accessories",
+price:3499,
+image:"image copy 6.png"
+},
+
+{
+name:"Denim Jacket",
+gender:"Men",
+type:"Basics",
+price:2499,
+image:"image copy 7.png"
+},
+
+{
+name:"Party Wear Dress",
+gender:"Women",
+type:"Basics",
+price:2999,
+image:"image copy 8.png"
+},
+
+{
+name:"School Backpack",
+gender:"Kids",
+type:"Accessories",
+price:1299,
+image:"image copy 9.png"
+},
+
+{
+name:"Fashion Sunglasses",
+gender:"Women",
+type:"Accessories",
+price:999,
+image:"image copy 10.png"
+},
+{ 
+  name: "Running Shoes",
+  gender: "Men",
+  type: "Footwear",
+  price: 2599,
+  image: "image copy 12.png"
+},
+{
+  name: "Sneakers",
+  gender: "Women",
+  type: "Footwear",
+  price: 1999,
+  image: "image copy 13.png"
+},
+{
+  name: "Winter Jacket",
+  gender: "Men",
+  type: "Winter Wear",
+  price: 3299,
+  image: "image copy 14.png"
+},
+{
+  name: "Wool Sweater",
+  gender: "Women",
+  type: "Winter Wear",
+  price: 1799,
+  image: "image copy 15.png"
+},
+{
+  name: "Ethnic Kurta",
+  gender: "Men",
+  type: "Ethnic Wear",
+  price: 1499,
+  image: "image copy 16.png"
+},
+{
+  name: "Lehenga Set",
+  gender: "Women",
+  type: "Ethnic Wear",
+  price: 4999,
+  image: "image copy 17.png"
+},
+{
+  name: "Gym T-Shirt",
+  gender: "Women",
+  type: "Basics",
+  price: 899,
+  image: "image copy 18.png"
+},
+{
+  name: "Joggers",
+  gender: "Women",
+  type: "Basics",
+  price: 1299,
+  image: "image copy 19.png"
+},
+{
+  name: "Kids Winter Jacket",
+  gender: "Kids",
+  type: "Winter Wear",
+  price: 1599,
+  image: "image copy 20.png"
+},
+{
+  name: "Kids Shoes",
+  gender: "Kids",
+  type: "Footwear",
+  price: 899,
+  image: "image copy 21.png"
+}
+
+];
+
+products.forEach((product,index)=> product.id = index);
+let cart=[];
+let favorites=[];
+let currentItems = products;
+let selectedGender = null;
+
+// Product Detail Variables
+let viewingProductId = null;
+let viewQuantity = 1;
+
+const container=document.getElementById("productContainer");
+
+const subcategoryIcons = {
+  "Sportswear": "⚽",
+  "Footwear": "👟",
+  "Winter Wear": "❄️",
+  "Ethnic Wear": "🥻",
+  "Accessories": "👜",
+  "Basics": "👕"
+};
+
+const subcategoriesByGender = {
+  "Men": ["Basics", "Sportswear", "Footwear", "Winter Wear", "Accessories"],
+  "Women": ["Basics", "Sportswear", "Footwear", "Winter Wear", "Ethnic Wear", "Accessories"],
+  "Kids": ["Basics", "Sportswear", "Footwear", "Winter Wear", "Accessories"]
+};
+
+function selectGender(gender){
+  selectedGender = gender;
+  document.getElementById("genderSection").classList.add("hidden");
+  document.getElementById("subcategorySection").classList.remove("hidden");
+  document.getElementById("selectedGenderTitle").innerText = `${gender} Collection`;
+  
+  const subcategoryContainer = document.getElementById("subcategoryContainer");
+  subcategoryContainer.innerHTML = "";
+  
+  const subcategories = subcategoriesByGender[gender];
+  subcategories.forEach(subcat => {
+    const icon = subcategoryIcons[subcat] || "📦";
+    subcategoryContainer.innerHTML += `
+      <div onclick="filterByTypeAndGender('${gender}', '${subcat}')"
+      class="bg-white p-10 rounded-xl shadow text-center cursor-pointer hover:bg-black hover:text-white duration-300">
+      ${icon}
+      <h3 class="text-xl mt-3">${subcat}</h3>
+      </div>
+    `;
+  });
+}
+
+function resetCategories(){
+  selectedGender = null;
+  document.getElementById("genderSection").classList.remove("hidden");
+  document.getElementById("subcategorySection").classList.add("hidden");
+  displayProducts(products);
+}
+
+function filterByTypeAndGender(gender, type){
+  const filtered = products.filter(product => 
+    product.gender === gender && product.type === type
+  );
+  displayProducts(filtered);
+}
+
+function displayProducts(items){
+  container.innerHTML="";
+  currentItems = items;
+
+  items.forEach((product)=>{
+    const isFav = favorites.includes(product.id);
+    container.innerHTML+=`
+      <div onclick="viewProduct(${product.id})" class="product-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer">
+        <div class="overflow-hidden">
+          <img src="${product.image}" class="w-full h-80 object-cover duration-500">
+        </div>
+        <div class="p-5">
+          <h3 class="text-xl font-bold">${product.name}</h3>
+          <p class="text-yellow-600 font-bold my-3">₹${product.price}</p>
+          <div class="flex gap-3">
+            <button onclick="event.stopPropagation(); toggleFavorite(${product.id})" class="text-2xl">
+              ${isFav ? '❤️' : '🤍'}
+            </button>
+            <button onclick="event.stopPropagation(); addToCart(${product.id})" class="flex-1 bg-black text-white py-3 rounded-xl">
+              Add To Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+displayProducts(products);
+
+function toggleCart(){
+  const cartSection = document.getElementById("cartSection");
+  cartSection.classList.toggle("hidden");
+  cartSection.classList.toggle("flex");
+  renderCart();
+}
+
+function toggleFavorites(){
+  const favoritesSection = document.getElementById("favoritesSection");
+  favoritesSection.classList.toggle("hidden");
+  favoritesSection.classList.toggle("flex");
+  renderFavorites();
+}
+
+function renderFavorites(){
+  const favoriteItems = document.getElementById("favoriteItems");
+  favoriteItems.innerHTML = "";
+  const list = favorites.map(id => products.find(product => product.id === id));
+
+  if(list.length === 0){
+    favoriteItems.innerHTML = '<p class="text-gray-500">No favorites yet.</p>';
+    return;
+  }
+
+  list.forEach((product) => {
+    favoriteItems.innerHTML += `
+      <div class="flex flex-col sm:flex-row items-center gap-4 p-4 bg-gray-100 rounded-3xl">
+        <img src="${product.image}" class="w-full sm:w-28 h-28 object-cover rounded-2xl" />
+        <div class="flex-1">
+          <h3 class="font-bold text-lg">${product.name}</h3>
+          <p class="text-yellow-600 font-bold mt-2">₹${product.price}</p>
+        </div>
+        <button onclick="toggleFavorite(${product.id})" class="text-red-500 font-semibold">Remove</button>
+      </div>
+    `;
+  });
+}
+
+function addToCart(index){
+  cart.push(products[index]);
+  document.getElementById("cartCount").innerText = cart.length;
+  renderCart();
+}
+
+function toggleFavorite(id){
+  const selectedIndex = favorites.indexOf(id);
+  if(selectedIndex === -1){
+    favorites.push(id);
+  } else {
+    favorites.splice(selectedIndex, 1);
+  }
+  document.getElementById("favCount").innerText = favorites.length;
+  displayProducts(currentItems);
+  renderFavorites();
+}
+
+function renderCart(){
+  const cartItems = document.getElementById("cartItems");
+  const cartTotal = document.getElementById("cartTotal");
+  cartItems.innerHTML = "";
+  if(cart.length === 0){
+    cartItems.innerHTML = '<p class="text-gray-500">Your cart is empty.</p>';
+    cartTotal.innerText = "";
+    return;
+  }
+
+  let total = 0;
+  cart.forEach((product,index) => {
+    total += product.price;
+    cartItems.innerHTML += `
+      <div class="flex flex-col sm:flex-row items-center gap-4 p-4 bg-gray-100 rounded-3xl">
+        <img src="${product.image}" class="w-full sm:w-28 h-28 object-cover rounded-2xl" />
+        <div class="flex-1">
+          <h3 class="font-bold text-lg">${product.name}</h3>
+          <p class="text-yellow-600 font-bold mt-2">₹${product.price}</p>
+        </div>
+        <button onclick="removeFromCart(${index})" class="text-red-500 font-semibold">Remove</button>
+      </div>
+    `;
+  });
+
+  cartTotal.innerText = `Total: ₹${total}`;
+}
+
+function removeFromCart(index){
+  cart.splice(index, 1);
+  document.getElementById("cartCount").innerText = cart.length;
+  renderCart();
+}
+
+// Product View Functions
+function viewProduct(id){
+  viewingProductId = id;
+  viewQuantity = 1;
+  const item = products[id];
+  
+  document.getElementById("viewImg").src = item.image;
+  document.getElementById("viewName").innerText = item.name;
+  document.getElementById("viewCategory").innerText = `Category: ${item.type}`;
+  document.getElementById("viewFor").innerText = `For: ${item.gender}`;
+  document.getElementById("viewPrice").innerText = `₹${item.price}`;
+  document.getElementById("viewQty").value = "1";
+  
+  const isFav = favorites.includes(id);
+  document.getElementById("viewLike").innerText = isFav ? '❤️' : '🤍';
+  
+  document.getElementById("productDetailSection").style.display = "flex";
+}
+
+function hideProductView(){
+  document.getElementById("productDetailSection").style.display = "none";
+  viewingProductId = null;
+  viewQuantity = 1;
+}
+
+function plusQty(){
+  viewQuantity++;
+  document.getElementById("viewQty").value = viewQuantity;
+}
+
+function minusQty(){
+  if(viewQuantity > 1){
+    viewQuantity--;
+    document.getElementById("viewQty").value = viewQuantity;
+  }
+}
+
+function addFromDetail(){
+  const item = products[viewingProductId];
+  for(let i = 0; i < viewQuantity; i++){
+    cart.push(item);
+  }
+  document.getElementById("cartCount").innerText = cart.length;
+  hideProductView();
+  alert("Added to cart!");
+}
+
+function toggleLike(){
+  const idx = favorites.indexOf(viewingProductId);
+  if(idx > -1){
+    favorites.splice(idx, 1);
+  } else {
+    favorites.push(viewingProductId);
+  }
+  
+  document.getElementById("favCount").innerText = favorites.length;
+  const isFav = favorites.includes(viewingProductId);
+  document.getElementById("viewLike").innerText = isFav ? '❤️' : '🤍';
+  displayProducts(currentItems);
+}
+
+document.getElementById("search")
+.addEventListener("keyup",function(){
+  let value = this.value.toLowerCase();
+  let filtered = products.filter(product => 
+    product.name.toLowerCase().includes(value)
+  );
+  displayProducts(filtered);
+});
+
+// Close modal on background click
+document.getElementById("productDetailSection").addEventListener("click", function(e){
+  if(e.target === this) hideProductView();
+});
+
+// Close on ESC
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape") hideProductView();
+});
+
+</script>
+
+</body>
+</html>
